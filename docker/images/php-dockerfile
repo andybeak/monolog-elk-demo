@@ -1,0 +1,33 @@
+FROM php:7.2-fpm
+
+RUN apt-get update
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    locales \
+    zip \
+    unzip \
+    curl \
+    libxml2-dev \
+    libcurl4-gnutls-dev \
+    wget \
+    libpng-dev libxpm-dev \
+    libjpeg62-turbo-dev \
+    libwebp-dev \
+    libfreetype6-dev
+
+RUN docker-php-ext-install opcache curl soap mbstring xml
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# Allow Composer to be run as root
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+# Install composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN php -r "unlink('composer-setup.php');"
+
+EXPOSE 9000
+WORKDIR /code
+CMD ["php-fpm"]

@@ -1,0 +1,39 @@
+version: '3'
+services:
+
+  webserver:
+    image: 'nginx:latest'
+    depends_on:
+      - php
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - '../src/:/code'
+      - './config/nginx/nginx_site.conf:/etc/nginx/conf.d/default.conf'
+
+  php:
+    build:
+      context: ./images
+      dockerfile: php-dockerfile
+    container_name: php
+    restart: always
+    volumes:
+      - '../src:/code'
+
+  logstash:
+    build:
+      context: ./images
+      dockerfile: logstash-dockerfile
+    container_name: logstash
+    expose:
+      - 9001
+    environment:
+      LS_JAVA_OPTS: "-Xms500m -Xmx500m -XX:ParallelGCThreads=1"
+    volumes:
+      - './config/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml'
+      - './config/logstash/logstash.conf:/usr/share/logstash/config/logstash_simple.conf'
+    entrypoint:
+      - logstash
+      - -f
+      - /usr/share/logstash/config/logstash_simple.conf

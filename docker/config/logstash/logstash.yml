@@ -1,0 +1,6 @@
+
+queue:
+  type: persisted
+  max_events: 1024
+  max_bytes: 256mb
+  drain: true
