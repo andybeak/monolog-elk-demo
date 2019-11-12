@@ -12,7 +12,9 @@ and inserting your AWS details into the `output` plugin config at the bottom.
 Then use these commands:
 
     cd docker
-    docker-compose up
+    docker-compose up -d
+    docker exec -it php /bin/bash
+    composer install
     
 And then visit `http://localhost:8000` in your browser.  After that you can use Kibana on your instance to view the log.
 
