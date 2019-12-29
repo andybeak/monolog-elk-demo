@@ -2,6 +2,6 @@ FROM docker.elastic.co/logstash/logstash:7.4.2
 
 USER root
 
-RUN yum update
+RUN yum update -y
 
 RUN /usr/share/logstash/bin/logstash-plugin install logstash-output-amazon_es
